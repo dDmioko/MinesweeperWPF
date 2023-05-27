@@ -1,10 +1,10 @@
-﻿using MinesweeperWPF.Lib;
-using System.Windows;
+﻿using System.Windows;
 
+using MinesweeperWPF.Lib;
 namespace MinesweeperWPF;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+///     Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : Window
 {
@@ -21,7 +21,6 @@ public partial class MainWindow : Window
 
     private void GenerateBoard()
     {
-
         BoardGrid.Rows = BoardSize;
         BoardGrid.Columns = BoardSize;
 
@@ -41,16 +40,15 @@ public partial class MainWindow : Window
             _game.ShowAllMines();
             MessageBox.Show("Вы проиграли!", "Поражение", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             ResetGame();
+            return;
         }
-        else
-        {
-            _game.OpenCell(cell);
-            if (!_game.IsGameEnded) return;
 
-            // Игра выиграна
-            MessageBox.Show("Поздравляю, вы выиграли!", "Победа", MessageBoxButton.OK, MessageBoxImage.Information);
-            ResetGame();
-        }
+        _game.OpenCell(cell);
+        if (!_game.IsGameEnded) return;
+
+        // Игра выиграна
+        MessageBox.Show("Поздравляю, вы выиграли!", "Победа", MessageBoxButton.OK, MessageBoxImage.Information);
+        ResetGame();
     }
 
     private void ResetGame()

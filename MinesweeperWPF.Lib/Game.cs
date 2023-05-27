@@ -1,31 +1,12 @@
 ﻿namespace MinesweeperWPF.Lib;
 
 /// <summary>
-/// Класс-релизация игры Сапёр
+///     Класс-релизация игры Сапёр
 /// </summary>
 public class Game
 {
-    /// <summary>
-    /// Размер игрового поля
-    /// </summary>
-    private int BoardSize { get; }
-
-    /// <summary>
-    /// Количество мин
-    /// </summary>
-    private int MineCount { get; }
-
-    /// <summary>
-    /// Массив ячеек игрового поля
-    /// </summary>
-    public Cell[,] Board { get; }
-
     // Количество оставшихся неоткрытых ячеек
     private int _remainingCells;
-    /// <summary>
-    /// Открыты ли все ячейки, кроме мин
-    /// </summary>
-    public bool IsGameEnded => _remainingCells == MineCount;
 
     public Game(int boardSize, int mineCount)
     {
@@ -37,6 +18,25 @@ public class Game
 
         GenerateBoard();
     }
+    
+    /// <summary>
+    ///     Размер игрового поля
+    /// </summary>
+    private int BoardSize { get; }
+
+    /// <summary>
+    ///     Количество мин
+    /// </summary>
+    private int MineCount { get; }
+
+    /// <summary>
+    ///     Массив ячеек игрового поля
+    /// </summary>
+    public Cell[,] Board { get; }
+    /// <summary>
+    ///     Открыты ли все ячейки, кроме мин
+    /// </summary>
+    public bool IsGameEnded => _remainingCells == MineCount;
 
     private void GenerateBoard()
     {
@@ -65,7 +65,7 @@ public class Game
                 emptyCount++;
             });
             if (emptyCount == 0) continue;
-            
+
             cell.HasMine = true;
             minesPlaced++;
         }
