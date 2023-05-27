@@ -11,13 +11,13 @@ public sealed class Cell : Button
     public bool HasMine { get; set; } = false;
     public bool HasFlag { get; set; } = false;
 
-    private bool isOpened = false;
+    private bool _isOpened = false;
     public bool IsOpened
     {
-        get => isOpened;
+        get => _isOpened;
         set
         {
-            isOpened = value;
+            _isOpened = value;
 
             // Обновляем цвет и стиль ячейки
             Content = HasMine ? "*" : null;
@@ -33,10 +33,6 @@ public sealed class Cell : Button
     {
         Row = row;
         Column = column;
-
-        //// Высота/ширина кнопки
-        //Width = 40;
-        //Height = 40;
 
         // Выравнивание содержимого по центру
         HorizontalContentAlignment = HorizontalAlignment.Center;
