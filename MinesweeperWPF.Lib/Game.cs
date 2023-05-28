@@ -23,9 +23,9 @@ public class Game
     }
 
     /// <summary>
-    ///     Количество оставшихся мин
+    /// Событие изменения количества оставшихся мин
     /// </summary>
-    public int RemainingMines => MineCount - _flaggedCells;
+    public event Action<int>? RemainingMinesChanged;
 
     /// <summary>
     ///     Размер игрового поля
@@ -132,6 +132,7 @@ public class Game
     {
         cell.SwitchFlag();
         _flaggedCells += cell.HasFlag ? 1 : -1;
+        RemainingMinesChanged?.Invoke(MineCount - _flaggedCells);
     }
 
     public void DoActionForEachCells(Action<Cell> action)

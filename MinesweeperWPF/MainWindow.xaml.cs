@@ -45,6 +45,7 @@ public partial class MainWindow : Window
         BoardGrid.Rows = BoardSize;
         BoardGrid.Columns = BoardSize;
 
+        _game.RemainingMinesChanged += UpdateCheckedMines;
         _game.DoActionForEachCells(cell =>
         {
             cell.PreviewMouseRightButtonDown += Cell_PreviewMouseRightButtonDown;
@@ -60,15 +61,15 @@ public partial class MainWindow : Window
         _game = new Game(BoardSize, MineCount);
         GenerateBoard();
 
-        // Очищаем количество отмеченных мин
-        UpdateCheckedMines();
+        // Очищаем счётчик оставшихся мин
+        UpdateCheckedMines(MineCount);
 
         // Очищаем таймер
         _startTime = DateTime.Now;
         Timer_Elapsed(null, null);
     }
 
-    private void UpdateCheckedMines() => CheckedMinesBlock.Text = $"Количество мин: {_game.RemainingMines}";
+    private void UpdateCheckedMines(int remainingMines) => RemainingMinesBlock.Text = $"Количество мин: {remainingMines}";
 
     private void Cell_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -76,7 +77,6 @@ public partial class MainWindow : Window
 
         var cell = (Cell)sender;
         _game.SwitchCellFlag(cell);
-        UpdateCheckedMines();
     }
 
     private void Cell_MouseLeftButtonDown(object sender, RoutedEventArgs e)
