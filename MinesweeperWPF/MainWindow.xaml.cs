@@ -78,7 +78,7 @@ public partial class MainWindow : Window
         Timer_Elapsed(null, null);
     }
 
-    private void UpdateCheckedMines(int remainingMines) => RemainingMinesBlock.Text = $"Количество мин: {remainingMines}";
+    private void UpdateCheckedMines(int remainingMines) => RemainingMinesBlock.Text = $"Мины: {remainingMines}";
 
     private void Cell_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -126,7 +126,7 @@ public partial class MainWindow : Window
     {
         // Вычисление прошедшего времени и обновление TimerBlock
         var elapsedTime = DateTime.Now - _startTime;
-        TimerBlock.Text = elapsedTime.ToString(@"hh\:mm\:ss");
+        TimerBlock.Text = $"Время: {elapsedTime:hh\\:mm\\:ss}";
     });
 
     private void BtnSettings_Click(object sender, RoutedEventArgs e)
