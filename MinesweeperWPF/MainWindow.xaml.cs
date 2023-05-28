@@ -115,6 +115,8 @@ public partial class MainWindow : Window
         if (!_game.IsGameEnded) return;
 
         // Игра выиграна
+        _timer.Stop();
+        
         MessageBox.Show("Поздравляю, вы выиграли!", "Победа", MessageBoxButton.OK, MessageBoxImage.Information);
         ResetGame();
     }

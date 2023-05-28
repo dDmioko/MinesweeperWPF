@@ -87,8 +87,13 @@ public class Game
     /// <returns>Попались на мину</returns>
     public bool OpenCell(Cell cell)
     {
+        // Если ячейка открыта или помечена флагом, то ничего не делаем
+        if (cell.IsOpened || cell.HasFlag) return false;
+
+        // Если попались на мину, то ничего не делаем
         var result = cell.HasMine;
-        if (cell.HasMine || cell.IsOpened || cell.HasFlag) return result;
+        if (cell.HasMine) return result;
+        
 
         cell.IsOpened = true;
         _remainingCells--;
