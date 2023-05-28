@@ -23,11 +23,6 @@ public class Game
     }
 
     /// <summary>
-    /// Событие изменения количества оставшихся мин
-    /// </summary>
-    public event Action<int>? RemainingMinesChanged;
-
-    /// <summary>
     ///     Размер игрового поля
     /// </summary>
     private int BoardSize { get; }
@@ -46,6 +41,11 @@ public class Game
     ///     Открыты ли все ячейки, кроме мин
     /// </summary>
     public bool IsGameEnded => _remainingCells == MineCount;
+
+    /// <summary>
+    ///     Событие изменения количества оставшихся мин
+    /// </summary>
+    public event Action<int>? RemainingMinesChanged;
 
     private void GenerateBoard()
     {
