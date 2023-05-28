@@ -52,6 +52,7 @@ public partial class MainWindow : Window
 
         foreach (var cell in _game.Board)
         {
+            cell.PreviewMouseRightButtonDown += Cell_PreviewMouseRightButtonDown;
             cell.Click += Cell_MouseLeftButtonDown;
             BoardGrid.Children.Add(cell);
         }
@@ -76,6 +77,14 @@ public partial class MainWindow : Window
     private void UpdateCheckedMines()
     {
         CheckedMinesBlock.Text = $"Количество мин: {_checkedMines}";
+    }
+
+    private static void Cell_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.RightButton != MouseButtonState.Pressed) return;
+
+        var cell = (Cell)sender;
+        Game.SwitchCellFlag(cell);
     }
 
     private void Cell_MouseLeftButtonDown(object sender, RoutedEventArgs e)

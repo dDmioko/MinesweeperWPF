@@ -18,7 +18,7 @@ public class Game
 
         GenerateBoard();
     }
-    
+
     /// <summary>
     ///     Размер игрового поля
     /// </summary>
@@ -33,6 +33,7 @@ public class Game
     ///     Массив ячеек игрового поля
     /// </summary>
     public Cell[,] Board { get; }
+
     /// <summary>
     ///     Открыты ли все ячейки, кроме мин
     /// </summary>
@@ -71,7 +72,12 @@ public class Game
         }
     }
 
-    public void OpenCell(Cell cell)
+    /// <summary>
+    ///     Открывает указанную ячейку
+    /// </summary>
+    /// <param name="cell">Ячейка</param>
+    /// <returns>Попались на мину</returns>
+    public bool OpenCell(Cell cell)
     {
         var result = cell.HasMine;
         if (cell.HasMine || cell.IsOpened || cell.HasFlag) return result;
@@ -99,6 +105,9 @@ public class Game
         return result;
     }
 
+    /// <summary>
+    ///     Показать все мины
+    /// </summary>
     public void ShowAllMines()
     {
         foreach (var cell in Board.Cast<Cell>().Where(p => p.HasMine))
@@ -106,6 +115,12 @@ public class Game
             cell.IsOpened = true;
         }
     }
+
+    /// <summary>
+    ///     Устанавливает флаг на ячейку
+    /// </summary>
+    /// <param name="cell">Ячейка</param>
+    public static void SwitchCellFlag(Cell cell) => cell.SwitchFlag();
 
     private void DoActionAroundCell(Cell cell, Action<int, int> action)
     {

@@ -3,9 +3,11 @@ using System.Windows.Controls;
 using System.Windows.Media;
 namespace MinesweeperWPF.Lib;
 
+/// <summary>
+///     Класс ячейки игры Сапёр
+/// </summary>
 public sealed class Cell : Button
 {
-
     private bool _isOpened;
 
     public Cell(int row, int column)
@@ -27,15 +29,31 @@ public sealed class Cell : Button
         // Цвет кнопки
         Background = Brushes.LightBlue;
     }
-    
+
+    /// <summary>
+    ///     Строка ячейка
+    /// </summary>
     public int Row { get; }
+
+    /// <summary>
+    ///     Столбец ячейки
+    /// </summary>
     public int Column { get; }
-    public bool HasMine { get; set; } = false;
-    public bool HasFlag { get; set; } = false;
+
+    /// <summary>
+    ///     Является ли ячейка миной
+    /// </summary>
+    public bool HasMine { get; internal set; }
+
+    /// <summary>
+    ///     Установлен флаг на ячеку
+    /// </summary>
+    public bool HasFlag { get; private set; }
+
     public bool IsOpened
     {
         get => _isOpened;
-        set
+        internal set
         {
             _isOpened = value;
 
@@ -48,4 +66,6 @@ public sealed class Cell : Button
             if (!HasMine) IsEnabled = false;
         }
     }
+
+    internal void SwitchFlag() => HasFlag = !HasFlag;
 }

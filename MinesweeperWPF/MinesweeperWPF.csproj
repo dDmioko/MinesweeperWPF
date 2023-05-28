@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MinesweeperWPF.Lib\MinesweeperWPF.Lib.csproj" />
+        <ProjectReference Include="..\MinesweeperWPF.Lib\MinesweeperWPF.Lib.csproj"/>
     </ItemGroup>
 
 </Project>
