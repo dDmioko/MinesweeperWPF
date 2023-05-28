@@ -4,13 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Minesweeper" Height="450" Width="400">
+        WindowStartupLocation="CenterScreen"
+        Title="Сапёр" Height="500" Width="400">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Height="50">
+        <UniformGrid DockPanel.Dock="Top" Columns="2" Height="50">
             <TextBlock Name="RemainingMinesBlock" Text="CheckedMines" VerticalAlignment="Center" Margin="10"
                        FontSize="18" />
             <TextBlock Name="TimerBlock" Text="Timer" VerticalAlignment="Center" Margin="10" FontSize="18" />
-        </StackPanel>
+        </UniformGrid>
+
+        <UniformGrid DockPanel.Dock="Bottom" Columns="2" Height="50">
+            <Button Content="Настройки" Click="BtnSettings_Click" />
+            <Button Content="Новая игра" Click="BtnNew_Click" />
+        </UniformGrid>
+
         <UniformGrid Name="BoardGrid" />
     </DockPanel>
 </Window>

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
+using MinesweeperWPF.Dialogs;
 using MinesweeperWPF.Lib;
 
 using Timer = System.Timers.Timer;
@@ -11,8 +12,6 @@ namespace MinesweeperWPF;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private const int BoardSize = 10; // Размер игрового поля
-    private const int MineCount = 15; // Количество мин
 
     /// <summary>
     ///     Таймер с интервалом в 1 секунду
@@ -22,7 +21,7 @@ public partial class MainWindow : Window
     /// <summary>
     ///     Класс с реализацией игры
     /// </summary>
-    private Game _game = new(BoardSize, MineCount);
+    private Game? _game;
     private DateTime _startTime;
 
     public MainWindow()
@@ -31,6 +30,14 @@ public partial class MainWindow : Window
         InitializeMainWindow();
         ResetGame();
     }
+    /// <summary>
+    ///     Размер игрового поля
+    /// </summary>
+    private int BoardSize { get; set; } = 10;
+    /// <summary>
+    ///     Количество мин
+    /// </summary>
+    private int MineCount { get; set; } = 10;
 
     private void InitializeMainWindow()
     {
@@ -44,6 +51,7 @@ public partial class MainWindow : Window
     {
         BoardGrid.Rows = BoardSize;
         BoardGrid.Columns = BoardSize;
+        if (_game == null) return;
 
         _game.RemainingMinesChanged += UpdateCheckedMines;
         _game.DoActionForEachCells(cell =>
@@ -65,6 +73,7 @@ public partial class MainWindow : Window
         UpdateCheckedMines(MineCount);
 
         // Очищаем таймер
+        _timer.Stop();
         _startTime = DateTime.Now;
         Timer_Elapsed(null, null);
     }
@@ -76,11 +85,13 @@ public partial class MainWindow : Window
         if (e.RightButton != MouseButtonState.Pressed) return;
 
         var cell = (Cell)sender;
-        _game.SwitchCellFlag(cell);
+        _game?.SwitchCellFlag(cell);
     }
 
     private void Cell_MouseLeftButtonDown(object sender, RoutedEventArgs e)
     {
+        if (_game == null) return;
+
         // Если таймер не запущен, то запускаем
         if (!_timer.Enabled)
         {
@@ -115,4 +126,19 @@ public partial class MainWindow : Window
         var elapsedTime = DateTime.Now - _startTime;
         TimerBlock.Text = elapsedTime.ToString(@"hh\:mm\:ss");
     });
+
+    private void BtnSettings_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SettingsDialog(BoardSize, MineCount)
+        {
+            Owner = this,
+        };
+        if (dialog.ShowDialog() != true) return;
+
+        BoardSize = dialog.BoardSize;
+        MineCount = dialog.MineCount;
+        ResetGame();
+    }
+
+    private void BtnNew_Click(object sender, RoutedEventArgs e) => ResetGame();
 }
