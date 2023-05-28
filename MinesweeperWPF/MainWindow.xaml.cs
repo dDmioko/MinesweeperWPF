@@ -20,11 +20,6 @@ public partial class MainWindow : Window
     private readonly Timer _timer = new(TimeSpan.FromSeconds(1));
 
     /// <summary>
-    ///     Количество отмеченных мин
-    /// </summary>
-    private int _checkedMines;
-
-    /// <summary>
     ///     Класс с реализацией игры
     /// </summary>
     private Game _game = new(BoardSize, MineCount);
@@ -50,41 +45,38 @@ public partial class MainWindow : Window
         BoardGrid.Rows = BoardSize;
         BoardGrid.Columns = BoardSize;
 
-        foreach (var cell in _game.Board)
+        _game.DoActionForEachCells(cell =>
         {
             cell.PreviewMouseRightButtonDown += Cell_PreviewMouseRightButtonDown;
             cell.Click += Cell_MouseLeftButtonDown;
             BoardGrid.Children.Add(cell);
-        }
+        });
     }
 
     private void ResetGame()
     {
         BoardGrid.Children.Clear();
 
+        _game = new Game(BoardSize, MineCount);
+        GenerateBoard();
+
         // Очищаем количество отмеченных мин
-        _checkedMines = 0;
         UpdateCheckedMines();
 
         // Очищаем таймер
         _startTime = DateTime.Now;
         Timer_Elapsed(null, null);
-
-        _game = new Game(BoardSize, MineCount);
-        GenerateBoard();
     }
 
-    private void UpdateCheckedMines()
-    {
-        CheckedMinesBlock.Text = $"Количество мин: {_checkedMines}";
-    }
+    private void UpdateCheckedMines() => CheckedMinesBlock.Text = $"Количество мин: {_game.RemainingMines}";
 
-    private static void Cell_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    private void Cell_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (e.RightButton != MouseButtonState.Pressed) return;
 
         var cell = (Cell)sender;
-        Game.SwitchCellFlag(cell);
+        _game.SwitchCellFlag(cell);
+        UpdateCheckedMines();
     }
 
     private void Cell_MouseLeftButtonDown(object sender, RoutedEventArgs e)
@@ -117,13 +109,10 @@ public partial class MainWindow : Window
     }
 
 
-    private void Timer_Elapsed(object? sender, EventArgs? e)
+    private void Timer_Elapsed(object? sender, EventArgs? e) => Dispatcher.Invoke(() =>
     {
-        Dispatcher.Invoke(() =>
-        {
-            // Вычисление прошедшего времени и обновление TimerBlock
-            var elapsedTime = DateTime.Now - _startTime;
-            TimerBlock.Text = elapsedTime.ToString(@"hh\:mm\:ss");
-        });
-    }
+        // Вычисление прошедшего времени и обновление TimerBlock
+        var elapsedTime = DateTime.Now - _startTime;
+        TimerBlock.Text = elapsedTime.ToString(@"hh\:mm\:ss");
+    });
 }

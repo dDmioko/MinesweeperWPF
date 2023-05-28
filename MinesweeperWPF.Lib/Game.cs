@@ -5,6 +5,9 @@
 /// </summary>
 public class Game
 {
+
+    // Количество ячеек с флагом
+    private int _flaggedCells;
     // Количество оставшихся неоткрытых ячеек
     private int _remainingCells;
 
@@ -20,6 +23,11 @@ public class Game
     }
 
     /// <summary>
+    ///     Количество оставшихся мин
+    /// </summary>
+    public int RemainingMines => MineCount - _flaggedCells;
+
+    /// <summary>
     ///     Размер игрового поля
     /// </summary>
     private int BoardSize { get; }
@@ -32,7 +40,7 @@ public class Game
     /// <summary>
     ///     Массив ячеек игрового поля
     /// </summary>
-    public Cell[,] Board { get; }
+    private Cell[,] Board { get; }
 
     /// <summary>
     ///     Открыты ли все ячейки, кроме мин
@@ -120,7 +128,19 @@ public class Game
     ///     Устанавливает флаг на ячейку
     /// </summary>
     /// <param name="cell">Ячейка</param>
-    public static void SwitchCellFlag(Cell cell) => cell.SwitchFlag();
+    public void SwitchCellFlag(Cell cell)
+    {
+        cell.SwitchFlag();
+        _flaggedCells += cell.HasFlag ? 1 : -1;
+    }
+
+    public void DoActionForEachCells(Action<Cell> action)
+    {
+        foreach (var cell in Board)
+        {
+            action.Invoke(cell);
+        }
+    }
 
     private void DoActionAroundCell(Cell cell, Action<int, int> action)
     {
