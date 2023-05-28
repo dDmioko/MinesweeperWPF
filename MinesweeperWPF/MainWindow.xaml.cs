@@ -1,8 +1,9 @@
-﻿using MinesweeperWPF.Lib;
+﻿using System.Windows;
+using System.Windows.Input;
 
-using System.Windows;
-using System.Windows.Threading;
+using MinesweeperWPF.Lib;
 
+using Timer = System.Timers.Timer;
 namespace MinesweeperWPF;
 
 /// <summary>
@@ -14,23 +15,20 @@ public partial class MainWindow : Window
     private const int MineCount = 15; // Количество мин
 
     /// <summary>
-    /// Количество отмеченных мин
+    ///     Таймер с интервалом в 1 секунду
+    /// </summary>
+    private readonly Timer _timer = new(TimeSpan.FromSeconds(1));
+
+    /// <summary>
+    ///     Количество отмеченных мин
     /// </summary>
     private int _checkedMines;
 
     /// <summary>
-    /// Таймер с интервалом в 1 секунду
-    /// </summary>
-    private readonly DispatcherTimer _timer = new()
-    {
-        Interval = TimeSpan.FromSeconds(1),
-    };
-    private DateTime _startTime;
-
-    /// <summary>
-    /// Класс с реализацией игры
+    ///     Класс с реализацией игры
     /// </summary>
     private Game _game = new(BoardSize, MineCount);
+    private DateTime _startTime;
 
     public MainWindow()
     {
@@ -41,7 +39,9 @@ public partial class MainWindow : Window
 
     private void InitializeMainWindow()
     {
-        _timer.Tick += Timer_Tick;
+        BoardGrid.Margin = new Thickness(5);
+        _timer.Elapsed += Timer_Elapsed;
+        _timer.AutoReset = true;
     }
 
 
@@ -67,7 +67,7 @@ public partial class MainWindow : Window
 
         // Очищаем таймер
         _startTime = DateTime.Now;
-        Timer_Tick(null, null);
+        Timer_Elapsed(null, null);
 
         _game = new Game(BoardSize, MineCount);
         GenerateBoard();
@@ -81,14 +81,15 @@ public partial class MainWindow : Window
     private void Cell_MouseLeftButtonDown(object sender, RoutedEventArgs e)
     {
         // Если таймер не запущен, то запускаем
-        if (!_timer.IsEnabled)
+        if (!_timer.Enabled)
         {
             _startTime = DateTime.Now;
             _timer.Start();
         }
 
         var cell = (Cell)sender;
-        if (cell.HasMine)
+        var result = _game.OpenCell(cell);
+        if (result)
         {
             // Игра проиграна
             _game.ShowAllMines();
@@ -99,7 +100,6 @@ public partial class MainWindow : Window
             return;
         }
 
-        _game.OpenCell(cell);
         if (!_game.IsGameEnded) return;
 
         // Игра выиграна
@@ -108,10 +108,13 @@ public partial class MainWindow : Window
     }
 
 
-    private void Timer_Tick(object? sender, EventArgs? e)
+    private void Timer_Elapsed(object? sender, EventArgs? e)
     {
-        // Вычисление прошедшего времени и обновление TimerBlock
-        TimeSpan elapsedTime = DateTime.Now - _startTime;
-        TimerBlock.Text = elapsedTime.ToString(@"hh\:mm\:ss");
+        Dispatcher.Invoke(() =>
+        {
+            // Вычисление прошедшего времени и обновление TimerBlock
+            var elapsedTime = DateTime.Now - _startTime;
+            TimerBlock.Text = elapsedTime.ToString(@"hh\:mm\:ss");
+        });
     }
 }

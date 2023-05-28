@@ -73,7 +73,8 @@ public class Game
 
     public void OpenCell(Cell cell)
     {
-        if (cell.IsOpened || cell.HasFlag) return;
+        var result = cell.HasMine;
+        if (cell.HasMine || cell.IsOpened || cell.HasFlag) return result;
 
         cell.IsOpened = true;
         _remainingCells--;
@@ -90,11 +91,12 @@ public class Game
         if (mineCount > 0)
         {
             cell.Content = mineCount.ToString();
-            return;
+            return result;
         }
 
         // Если вокруг ячейки нет мин, открываем соседние ячейки рекурсивно
         DoActionAroundCell(cell, (i, j) => OpenCell(Board[i, j]));
+        return result;
     }
 
     public void ShowAllMines()
