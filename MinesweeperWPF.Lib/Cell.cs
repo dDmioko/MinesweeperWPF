@@ -10,8 +10,8 @@ namespace MinesweeperWPF.Lib;
 public sealed class Cell : Button
 {
 
-    private readonly BitmapImage _bombBitmap = new(Helpers.GetResourceUri("cell-bomb.gif"));
-    private readonly BitmapImage _mineBitmap = new(Helpers.GetResourceUri("cell-mine.gif"));
+    private static readonly BitmapImage BombBitmap = new(Helpers.GetResourceUri("cell-bomb.gif"));
+    private static readonly BitmapImage MineBitmap = new(Helpers.GetResourceUri("cell-mine.gif"));
 
     private bool _hasFlag;
     private bool _isOpened;
@@ -60,7 +60,7 @@ public sealed class Cell : Button
         private set
         {
             _hasFlag = value;
-            Content = value ? GetImage(_mineBitmap) : null;
+            Content = value ? GetImage(MineBitmap) : null;
         }
     }
 
@@ -72,7 +72,7 @@ public sealed class Cell : Button
             _isOpened = value;
 
             // Обновляем цвет и стиль ячейки
-            Content = HasMine ? GetImage(_bombBitmap) : null;
+            Content = HasMine ? GetImage(BombBitmap) : null;
             Foreground = HasMine ? Brushes.Red : Brushes.LightGray;
             FontWeight = FontWeights.Bold;
 
