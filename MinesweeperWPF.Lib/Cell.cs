@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 namespace MinesweeperWPF.Lib;
 
 /// <summary>
@@ -8,6 +9,11 @@ namespace MinesweeperWPF.Lib;
 /// </summary>
 public sealed class Cell : Button
 {
+
+    private readonly BitmapImage _bombBitmap = new(Helpers.GetResourceUri("cell-bomb.gif"));
+    private readonly BitmapImage _mineBitmap = new(Helpers.GetResourceUri("cell-mine.gif"));
+
+    private bool _hasFlag;
     private bool _isOpened;
 
     public Cell(int row, int column)
@@ -48,7 +54,15 @@ public sealed class Cell : Button
     /// <summary>
     ///     Установлен флаг на ячеку
     /// </summary>
-    public bool HasFlag { get; private set; }
+    public bool HasFlag
+    {
+        get => _hasFlag;
+        private set
+        {
+            _hasFlag = value;
+            Content = value ? GetImage(_mineBitmap) : null;
+        }
+    }
 
     public bool IsOpened
     {
@@ -58,7 +72,7 @@ public sealed class Cell : Button
             _isOpened = value;
 
             // Обновляем цвет и стиль ячейки
-            Content = HasMine ? "*" : null;
+            Content = HasMine ? GetImage(_bombBitmap) : null;
             Foreground = HasMine ? Brushes.Red : Brushes.LightGray;
             FontWeight = FontWeights.Bold;
 
@@ -68,4 +82,6 @@ public sealed class Cell : Button
     }
 
     internal void SwitchFlag() => HasFlag = !HasFlag;
+
+    private static Image GetImage(ImageSource bitmapImage) => new() { Source = bitmapImage };
 }

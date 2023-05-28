@@ -7,4 +7,15 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Remove="Resources\cell-bomb.gif"/>
+        <Content Include="Resources\cell-bomb.gif">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <None Remove="Resources\cell-mine.gif"/>
+        <Content Include="Resources\cell-mine.gif">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 </Project>

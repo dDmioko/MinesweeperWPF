@@ -3,7 +3,7 @@
 /// <summary>
 ///     Класс-релизация игры Сапёр
 /// </summary>
-public class Game
+public sealed class Game
 {
 
     // Количество ячеек с флагом
@@ -93,7 +93,6 @@ public class Game
         // Если попались на мину, то ничего не делаем
         var result = cell.HasMine;
         if (cell.HasMine) return result;
-        
 
         cell.IsOpened = true;
         _remainingCells--;
